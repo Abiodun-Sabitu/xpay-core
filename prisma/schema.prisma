@@ -16,59 +16,64 @@ datasource db {
 // Onboarding Models
 
 model User {
-  id             String    @id @default(dbgenerated("gen_random_uuid()"))
-  firstName      String?
-  lastName       String?
-  email          String    @unique
-  phoneNo        String?   @unique
-  password       String
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  wallets        Wallet[]
-  kyc            KYC?      @relation(fields: [kycId], references: [id])
-  kycId          String?   @unique
-  emailVerified  Boolean   @default(false)
-  tokenExpiry    DateTime?
+  id                String      @id @default(dbgenerated("gen_random_uuid()"))
+  firstName         String?
+  lastName          String?
+  email             String      @unique
+  phoneNo           String?     @unique
+  password          String
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  wallets           Wallet[]
+  kycProfile        KYCProfile? @relation(fields: [kycProfileId], references: [id])
+  kycProfileId      String?     @unique
+  emailVerified     Boolean     @default(false)
+  verificationToken String?     // Token for email verification
+  tokenExpiry       DateTime?   // Expiry date for the verification token
+  otp               String?     // OTP for login or other actions
+  otpExpiry         DateTime?   // Expiry date for OTP
 }
 
-model KYC {
-  id             String    @id @default(dbgenerated("gen_random_uuid()"))
-  street         String
-  photo          String?   // URL to a photo
-  bvn            String?   // Bank Verification Number
-  address        String?
-  landmark       String?
-  city           String
-  state          String
-  country        String
-  addressDocument String   // URL or path to documentary evidence
-  validID        String    // URL or path to an image of the ID
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  user           User?     @relation
-  userId         String?   @unique
+model KYCProfile {
+  id                String    @id @default(dbgenerated("gen_random_uuid()"))
+  street            String
+  photo             String?   // URL to a photo
+  bvn               String?   // Bank Verification Number
+  address           String?
+  landmark          String?
+  city              String
+  state             String
+  country           String
+  addressDocument   String    // URL or path to documentary evidence
+  validID           String    // URL or path to an image of the ID
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  user              User?     @relation
+  userId            String?   @unique
 }
+
 
 model Wallet {
-  id             String        @id @default(dbgenerated("gen_random_uuid()"))
-  accountNumber  String        @unique
-  currency       String
-  balance        Float         @default(0)
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  user           User          @relation(fields: [userId], references: [id])
-  userId         String
-  transactions   Transaction[]
+  id              String        @id @default(dbgenerated("gen_random_uuid()"))
+  accountNumber   String        @unique
+  currency        String
+  balance         Float         @default(0)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  user            User          @relation(fields: [userId], references: [id])
+  userId          String
+  transactions    Transaction[]
   @@unique([userId, currency])
 }
 
 model Transaction {
-  id             String    @id @default(dbgenerated("gen_random_uuid()"))
-  amount         Float
-  createdAt      DateTime  @default(now())
-  wallet         Wallet    @relation(fields: [walletId], references: [id])
-  walletId       String
-  type           String    // "DEPOSIT" or "WITHDRAWAL"
-  description    String?
+  id              String    @id @default(dbgenerated("gen_random_uuid()"))
+  amount          Float
+  createdAt       DateTime  @default(now())
+  wallet          Wallet    @relation(fields: [walletId], references: [id])
+  walletId        String
+  type            String    // "DEPOSIT" or "WITHDRAWAL"
+  description     String?
 }
+
 

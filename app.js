@@ -4,6 +4,10 @@ import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
 import { options } from "./swaggerConfig.js"; // Importing the options
 import onboardUserRoutes from "./routes/onboardUserRoute.js";
+import emailVerificationRoute from "./routes/emailVerificationRoute.js";
+import userLoginRoute from "./routes/userLoginRoute.js";
+import otpVerificationRoute from "./routes/otpVerificationRoute.js";
+import resendOtpRoute from "./routes/resendOtpRoute.js";
 const app = express();
 const specs = swaggerJsdoc(options);
 
@@ -23,7 +27,10 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // Use your routes
 app.use(onboardUserRoutes);
-
+app.use(emailVerificationRoute);
+app.use(userLoginRoute);
+app.use(otpVerificationRoute);
+app.use(resendOtpRoute);
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
