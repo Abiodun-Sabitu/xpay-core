@@ -1,90 +1,3 @@
-// import { PrismaClient } from "@prisma/client";
-// import jwt from "jsonwebtoken";
-// import { otpVerificationMail } from "../emails/otpVerificationMail.js";
-// import bcrypt from "bcrypt";
-// import {
-//   generateOtp,
-//   generateEmailVerificationToken,
-// } from "../helpers/generateTokens.js";
-// import { sendVerificationEmail } from "../services/emailService.js";
-// import { emailVerificationContent } from "../emails/emailVerificationMail.js";
-
-// const prisma = new PrismaClient();
-
-// const login = async (req, res) => {
-//   const { email, password } = req.body;
-
-//   try {
-//     const user = await prisma.user.findUnique({
-//       where: { email },
-//     });
-
-//     if (!user) {
-//       return res
-//         .status(404)
-//         .json({ message: "User not found. Please register first." });
-//     }
-
-//     const isPasswordValid = await bcrypt.compare(password, user.password);
-//     if (!isPasswordValid) {
-//       return res.status(401).json({ message: "Invalid password." });
-//     }
-
-//     if (!user.emailVerified) {
-//       const tokenIsExpired = new Date() > new Date(user.tokenExpiry);
-//       if (!tokenIsExpired) {
-//         return res.status(403).json({
-//           message:
-//             " Your email verification is still pending, Please check your mailbox and(spam folder) to verify your email before logging in.",
-//         });
-//       }
-
-//       const newToken = generateEmailVerificationToken({ id: user.id }); //Generate token using user ID
-//       const verificationUrl = `${process.env.BASE_URL}/verify-email?token=${newToken}`;
-//       const subject = "VERIFY YOUR EMAIL";
-//       await sendVerificationEmail(
-//         user.email,
-//         emailVerificationContent(verificationUrl),
-//         subject
-//       );
-//       return res.status(200).json({
-//         message:
-//           "We noticed you missed your initial verification email, and it expired. No worries, we've sent another one. Please check your mailbox and verify your email to login.",
-//       });
-//     }
-
-//     const otp = generateOtp();
-//     const subject = "X-Pay LOGIN VERIFICATION";
-//     await sendVerificationEmail(user.email, otpVerificationMail(otp), subject);
-
-//     const otpExpiry = new Date();
-//     otpExpiry.setMinutes(otpExpiry.getMinutes() + 2); // OTP valid for 2 minutes
-
-//     await prisma.user.update({
-//       where: { id: user.id },
-//       data: { otp, otpExpiry },
-//     });
-
-//     const tempToken = jwt.sign(
-//       { userId: user.id },
-//       process.env.TEMP_JWT_SECRET,
-//       { expiresIn: "10m" }
-//     ); // Temporary token
-
-//     return res.status(200).json({
-//       message: "OTP sent sent to your registered email.",
-//       tempToken,
-//       userId: user.id,
-//     });
-//   } catch (error) {
-//     console.error("error sending otp:", error);
-//     return res
-//       .status(500)
-//       .json({ message: "Error sending OTP, please try again." });
-//   }
-// };
-
-// export default login;
 import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -92,10 +5,10 @@ import bcrypt from "bcrypt";
 import {
   generateOtp,
   generateEmailVerificationToken,
-} from "../helpers/generateTokens.js";
-import { sendVerificationEmail } from "../services/emailService.js";
-import { emailVerificationContent } from "../emails/emailVerificationMail.js";
-import { otpVerificationMail } from "../emails/otpVerificationMail.js";
+} from "../../helpers/generateTokens.js";
+import { sendVerificationEmail } from "../../services/emailService.js";
+import { emailVerificationContent } from "../../emails/emailVerificationMail.js";
+import { otpVerificationMail } from "../../emails/otpVerificationMail.js";
 
 const prisma = new PrismaClient();
 

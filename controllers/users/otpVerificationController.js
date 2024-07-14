@@ -65,8 +65,14 @@ const prisma = new PrismaClient();
 
 const verifyOtp = async (req, res) => {
   const otp = req.body.otp;
-  // const tempToken = req.headers.authorization?.split(" ")[1]; // Assuming the token is sent as "Bearer [token]"
 
+  // Handle request validation errors
+  if (req.validationError) {
+    const errorMessages = req.validationError.details.map(
+      (detail) => detail.message
+    );
+    return res.status(400).send(errorMessages.join("\n")); // Send validation errors
+  }
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Unauthorized Operation" });
@@ -74,9 +80,7 @@ const verifyOtp = async (req, res) => {
   const tempToken = authHeader.split(" ")[1];
 
   if (!tempToken) {
-    return res
-      .status(401)
-      .json({ message: "Authentication token is required." });
+    return res.status(401).json({ message: "Authentication required." });
   }
 
   try {

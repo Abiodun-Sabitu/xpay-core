@@ -1,8 +1,11 @@
 import express from "express";
-import verifyOtp from "../controllers/otpVerificationController.js";
+import verifyOtp from "../controllers/users/otpVerificationController.js";
+import validate from "../middlewares/validationMiddleware.js";
+import { OtpSchema } from "../helpers/userValidationSchemas.js";
 const router = express.Router();
-router.post("/verify-otp", verifyOtp);
+router.post("/verify-otp", validate(OtpSchema), verifyOtp);
 export default router;
+
 /**
  * @swagger
  * /verify-otp:

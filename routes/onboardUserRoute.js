@@ -1,6 +1,6 @@
 import express from "express";
-import onboardUser from "../controllers/onboardUserController.js";
-import validate from "../helpers/validationMiddleware.js";
+import onboardUser from "../controllers/users/onboardUserController.js";
+import validate from "../middlewares/validationMiddleware.js";
 import { onboardUserSchema } from "../helpers/userValidationSchemas.js";
 
 const router = express.Router();

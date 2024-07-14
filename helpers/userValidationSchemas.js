@@ -25,3 +25,7 @@ export const loginUserSchema = Joi.object({
     .message("invalid password")
     .required(),
 });
+
+export const OtpSchema = Joi.object({
+  otp: Joi.string().min(6).max(6).trim().required(),
+});

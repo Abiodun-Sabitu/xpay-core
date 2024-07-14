@@ -1,6 +1,3 @@
-import emailVerificationToken from "../controllers/onboardUserController.js";
-// console.log(emailVerificationToken);
-
 export const emailVerificationContent = (verificationUrl, firstName) => {
   const message = `
 	<!DOCTYPE html>

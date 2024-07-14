@@ -1,8 +1,8 @@
 import express from "express";
 const router = express.Router();
-import resendOtp from "../controllers/resendOtpController.js";
+import resendOtp from "../controllers/users/resendOtpController.js";
 
-router.get("/resend-otp", resendOtp);
+router.post("/resend-otp", resendOtp);
 
 export default router;
 
@@ -10,24 +10,15 @@ export default router;
  * @swagger
  * /resend-otp:
  *   post:
- *     summary: Resend OTP to the user's registered email.
- *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *             properties:
- *               email:
- *                 type: string
- *                 description: The email address to which the OTP should be resent.
- *                 example: "user@example.com"
+ *     summary: Resends the OTP to the user's registered email within a valid login session / instance.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - BearerAuth: []
+ *     description: "This endpoint resends a new OTP to the user's email. The user must be authenticated with a valid temporary JWT and must have their email verified."
  *     responses:
  *       200:
- *         description: A new OTP has been successfully sent to the user's email.
+ *         description: A new OTP has been successfully sent to the registered email.
  *         content:
  *           application/json:
  *             schema:
@@ -38,12 +29,24 @@ export default router;
  *                   example: "A new OTP has been sent to your registered email."
  *                 tempToken:
  *                   type: string
- *                   example: "temporary.jwt.token.here"
+ *                   description: "The temporary token that was used for authentication."
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
  *                 userId:
  *                   type: integer
+ *                   description: "The unique identifier of the user."
  *                   example: 123
+ *       401:
+ *         description: Unauthorized access, either due to missing, expired, or invalid temporary token.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Unauthorized Operation. Authentication required."
  *       403:
- *         description: User has not verified their email yet.
+ *         description: User email is not verified or other authorization related issue.
  *         content:
  *           application/json:
  *             schema:
@@ -51,9 +54,9 @@ export default router;
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Please verify your email before requesting a new OTP."
+ *                   example: "Operation Forbidden. Please verify your email before requesting a new OTP."
  *       404:
- *         description: No user found with the provided email address.
+ *         description: No user found with the provided credentials.
  *         content:
  *           application/json:
  *             schema:
@@ -61,9 +64,9 @@ export default router;
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "User not found."
+ *                   example: "Unauthorized, user unknown."
  *       500:
- *         description: Internal server error when trying to resend OTP.
+ *         description: An internal error occurred while processing the request.
  *         content:
  *           application/json:
  *             schema:
@@ -71,5 +74,5 @@ export default router;
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Failed to resend OTP, please try again later."
+ *                   example: "An error occurred while sending OTP . Please try again."
  */
