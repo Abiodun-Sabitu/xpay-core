@@ -1,9 +1,10 @@
 import express from "express";
-import verifyOtp from "../controllers/users/otpVerificationController.js";
-import validate from "../middlewares/validationMiddleware.js";
-import { OtpSchema } from "../helpers/userValidationSchemas.js";
+import verifyOtp from "../../controllers/users/otpVerificationController.js";
+import validate from "../../middlewares/validationMiddleware.js";
+import { OtpSchema } from "../../helpers/userValidationSchemas.js";
+import { verifyTempToken } from "../../middlewares/tempTokenAuth.js";
 const router = express.Router();
-router.post("/verify-otp", validate(OtpSchema), verifyOtp);
+router.post("/verify-otp", verifyTempToken, validate(OtpSchema), verifyOtp);
 export default router;
 
 /**

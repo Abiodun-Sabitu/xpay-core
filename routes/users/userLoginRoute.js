@@ -1,7 +1,7 @@
 import express from "express";
-import login from "../controllers/users/loginController.js";
-import validate from "../middlewares/validationMiddleware.js";
-import { loginUserSchema } from "../helpers/userValidationSchemas.js";
+import login from "../../controllers/users/loginController.js";
+import validate from "../../middlewares/validationMiddleware.js";
+import { loginUserSchema } from "../../helpers/userValidationSchemas.js";
 const router = express.Router();
 router.post("/auth/login", validate(loginUserSchema), login);
 export default router;

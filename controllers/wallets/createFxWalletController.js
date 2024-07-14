@@ -1,15 +1,13 @@
-// walletRoutes.js
-import express from "express";
-import { isAuthenticated } from "./authMiddleware.js";
 import { PrismaClient } from "@prisma/client";
 import { generateAccountNumber } from "../../helpers/accountNumberGenerator.js";
 import { getOpeningBalance } from "../../helpers/balanceConverters.js";
+import { sendVerificationEmail } from "../../services/emailService.js";
+import { accountCreationMail } from "../../emails/accountCreationMail.js";
 
-const router = express.Router();
 const prisma = new PrismaClient();
 
-router.post("/create-fx-wallet", isAuthenticated, async (req, res) => {
-  const userId = req.user.id;
+const createFxWallet = async (req, res) => {
+  const userId = req.user;
   const { currency } = req.body; // 'GBP' or 'USD'
 
   // Validate currency
@@ -27,7 +25,7 @@ router.post("/create-fx-wallet", isAuthenticated, async (req, res) => {
     if (existingWallet) {
       return res
         .status(409)
-        .json({ message: `User already has a ${currency} wallet.` });
+        .json({ message: `You already have a ${currency} wallet.` });
     }
 
     const accountNumber = generateAccountNumber(currency);
@@ -45,10 +43,20 @@ router.post("/create-fx-wallet", isAuthenticated, async (req, res) => {
       message: `${currency} Wallet created successfully.`,
       wallet: newWallet,
     });
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+    const subject = `X-PAY ${newWallet.currency} WALLET CREATION`;
+    await sendVerificationEmail(
+      user.email,
+      accountCreationMail(newWallet.accountNumber, newWallet.currency),
+      subject
+    );
   } catch (error) {
     console.error(`Failed to create ${currency} wallet:`, error);
     res.status(500).json({ message: "Internal server error" });
   }
-});
+};
 
-export default router;
+export default createFxWallet;

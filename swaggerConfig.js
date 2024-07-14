@@ -34,10 +34,12 @@ export const swaggerDefinition = {
 export const options = {
   swaggerDefinition,
   apis: [
-    "./routes/onboardUserRoute.js",
-    "./routes/emailVerificationRoute.js",
-    "./routes/userLoginRoute.js",
-    "./routes/otpVerificationRoute.js",
-    "./routes/resendOtpRoute.js",
+    "./routes/users/onboardUserRoute.js",
+    "./routes/users/emailVerificationRoute.js",
+    "./routes/users/userLoginRoute.js",
+    "./routes/users/otpVerificationRoute.js",
+    "./routes/users/resendOtpRoute.js",
+    "./routes/wallets/create-fx-walletRoute.js",
+    "./routes/wallets/create-ngn-walletRoute.js",
   ], // Make sure this path is correct and points to your route files
 };

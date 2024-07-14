@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import jwt from "jsonwebtoken";
 import { generateOtp } from "../../helpers/generateTokens.js";
 import { sendVerificationEmail } from "../../services/emailService.js";
 import { otpVerificationMail } from "../../emails/otpVerificationMail.js";
@@ -7,36 +6,9 @@ import { otpVerificationMail } from "../../emails/otpVerificationMail.js";
 const prisma = new PrismaClient();
 
 const resendOtp = async (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "Unauthorized Operation" });
-  }
-  const tempToken = authHeader.split(" ")[1];
-
-  if (!tempToken) {
-    return res.status(401).json({ message: "Authentication required." });
-  }
+  const user = req.user; // Extracted by verifyTempToken middleware
 
   try {
-    // Decode the temporary token to extract the userId
-    const decoded = jwt.verify(tempToken, process.env.TEMP_JWT_SECRET);
-    const userId = decoded.userId;
-
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
-
-    if (!user) {
-      return res.status(404).json({ message: "Unauthorized, user unknown" });
-    }
-
-    if (!user.emailVerified) {
-      console.log("Please verify your email before requesting a new OTP");
-      return res.status(403).json({
-        message: "Operation Forbidden",
-      });
-    }
-
     const otp = generateOtp();
     const otpExpiry = new Date();
     otpExpiry.setMinutes(otpExpiry.getMinutes() + 4); // Set OTP expiry to 4 minutes from now
@@ -51,30 +23,16 @@ const resendOtp = async (req, res) => {
     const subject = "Your new OTP";
     await sendVerificationEmail(user.email, otpVerificationMail(otp), subject);
 
-    return res.status(200).json({
+    res.status(200).json({
       message: "A new OTP has been sent to your registered email.",
-      tempToken, // Return the existing tempToken without reissuing a new one
       userId: user.id,
     });
   } catch (error) {
-    // Handle token verification errors
-    if (error instanceof jwt.TokenExpiredError) {
-      console.error("Expire tempToken:", error);
-      return res.status(401).json({
-        message:
-          "Your session has expired. Please log in again to continue and keep your account secure",
-      });
-    } else if (error instanceof jwt.JsonWebTokenError) {
-      console.error("possible tampered tempToken:", error);
-      return res
-        .status(401)
-        .json({ message: "Login session aborted. Please log in again." });
-    } else {
-      console.error("Error verifying OTP:", error);
-      return res.status(500).json({
-        message: "An error occurred while sending OTP . Please try again.",
-      });
-    }
+    console.error("Error resending OTP:", error);
+    res.status(500).json({
+      message:
+        "An error occurred while resending the OTP. Please try again later.",
+    });
   }
 };
 

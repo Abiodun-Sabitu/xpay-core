@@ -3,11 +3,13 @@ import express from "express";
 import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
 import { options } from "./swaggerConfig.js"; // Importing the options
-import onboardUserRoutes from "./routes/onboardUserRoute.js";
-import emailVerificationRoute from "./routes/emailVerificationRoute.js";
-import userLoginRoute from "./routes/userLoginRoute.js";
-import otpVerificationRoute from "./routes/otpVerificationRoute.js";
-import resendOtpRoute from "./routes/resendOtpRoute.js";
+import onboardUserRoutes from "./routes/users/onboardUserRoute.js";
+import emailVerificationRoute from "./routes/users/emailVerificationRoute.js";
+import userLoginRoute from "./routes/users/userLoginRoute.js";
+import otpVerificationRoute from "./routes/users/otpVerificationRoute.js";
+import resendOtpRoute from "./routes/users/resendOtpRoute.js";
+import createFxWallet from "./routes/wallets/create-fx-walletRoute.js";
+import createNgnWallet from "./routes/wallets/create-ngn-walletRoute.js";
 const app = express();
 const specs = swaggerJsdoc(options);
 
@@ -31,6 +33,8 @@ app.use(emailVerificationRoute);
 app.use(userLoginRoute);
 app.use(otpVerificationRoute);
 app.use(resendOtpRoute);
+app.use(createFxWallet);
+app.use(createNgnWallet);
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);

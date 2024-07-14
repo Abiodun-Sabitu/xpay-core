@@ -1,8 +1,9 @@
 import express from "express";
+import { verifyTempToken } from "../../middlewares/tempTokenAuth.js";
+import resendOtp from "../../controllers/users/resendOtpController.js";
 const router = express.Router();
-import resendOtp from "../controllers/users/resendOtpController.js";
 
-router.post("/resend-otp", resendOtp);
+router.post("/resend-otp", verifyTempToken, resendOtp);
 
 export default router;
 
