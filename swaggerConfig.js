@@ -41,5 +41,7 @@ export const options = {
     "./routes/users/resendOtpRoute.js",
     "./routes/wallets/create-fx-walletRoute.js",
     "./routes/wallets/create-ngn-walletRoute.js",
+    "./routes/wallets/fetchWalletsRoute.js",
+    "./routes/transactions/transferRoute.js",
   ], // Make sure this path is correct and points to your route files
 };

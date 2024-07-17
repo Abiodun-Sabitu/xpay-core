@@ -28,6 +28,16 @@ const createFxWallet = async (req, res) => {
         .json({ message: `You already have a ${currency} wallet.` });
     }
 
+    const checkKYCStatus = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!checkKYCStatus.kycVerified) {
+      return res.status(409).json({
+        message: `Please complete your KYC to operate an FX wallet.`,
+      });
+    }
+
     const accountNumber = generateAccountNumber(currency);
     const openingBalance = getOpeningBalance(); // Get the standard opening balance
     const newWallet = await prisma.wallet.create({

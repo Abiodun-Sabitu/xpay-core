@@ -24,7 +24,7 @@ export default router;
  *                 example: "user@example.com"
  *               password:
  *                 type: string
- *                 example: "userpassword"
+ *                 example: "Yoursecure234password@@"
  *     responses:
  *       200:
  *         description: Login successful or OTP sent for verification.

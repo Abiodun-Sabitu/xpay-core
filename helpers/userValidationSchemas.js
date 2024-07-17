@@ -29,3 +29,10 @@ export const loginUserSchema = Joi.object({
 export const OtpSchema = Joi.object({
   otp: Joi.string().min(6).max(6).trim().required(),
 });
+
+export const transferSchema = Joi.object({
+  senderWalletId: Joi.string().required(),
+  receiverWalletId: Joi.string().required(),
+  amount: Joi.number().positive().required(),
+  description: Joi.string().allow(""),
+});

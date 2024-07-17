@@ -6,8 +6,8 @@ import Decimal from "decimal.js";
  * @param {string} balanceString - The balance string fetched from the database.
  * @return {Decimal} - A Decimal object representing the balance.
  */
-export function fetchedWalletBalance(balanceString) {
-  return new Decimal(balanceString);
+export function numeralize(amountInString) {
+  return new Decimal(amountInString);
 }
 
 /**
@@ -15,7 +15,7 @@ export function fetchedWalletBalance(balanceString) {
  * @param {Decimal} decimalValue - The Decimal representation of the balance.
  * @return {string} - The balance formatted as a string with two decimal places.
  */
-export function unspentWalletBalance(decimalValue) {
+export function deNumeralize(decimalValue) {
   return decimalValue.toFixed(2); // Ensures the balance is a string with two decimal places.
 }
 

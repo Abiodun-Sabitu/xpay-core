@@ -29,7 +29,7 @@ export function isAuthenticated(req, res, next) {
       }
     }
     req.user = decoded.userId; // Attach the decoded payload to request object
-    console.log(req.user);
+    // console.log(req.user);
     next();
   });
 }

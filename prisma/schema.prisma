@@ -28,6 +28,7 @@ model User {
   kycProfile        KYCProfile? @relation(fields: [kycProfileId], references: [id])
   kycProfileId      String?     @unique
   emailVerified     Boolean     @default(false)
+  kycVerified       Boolean     @default(false)
   verificationToken String?     // Token for email verification
   tokenExpiry       DateTime?   // Expiry date for the verification token
   otp               String?     // OTP for login or other actions
@@ -57,23 +58,35 @@ model Wallet {
   id              String        @id @default(dbgenerated("gen_random_uuid()"))
   accountNumber   String        @unique
   currency        String
-  balance         String        @default("0.00") 
+  balance         String        @default("0.00")
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
   user            User          @relation(fields: [userId], references: [id])
   userId          String
-  transactions    Transaction[]
+  debits          Transaction[] @relation("SenderWallet")
+  credits         Transaction[] @relation("ReceiverWallet")
   @@unique([userId, currency])
 }
 
+
+
 model Transaction {
-  id              String    @id @default(dbgenerated("gen_random_uuid()"))
-  amount          Float
-  createdAt       DateTime  @default(now())
-  wallet          Wallet    @relation(fields: [walletId], references: [id])
-  walletId        String
-  type            String    // "DEPOSIT" or "WITHDRAWAL"
-  description     String?
+  id                String    @id @default(dbgenerated("gen_random_uuid()"))
+  type              String    @default("Transfer")
+  amount            String    @default("0.00")
+  description       String?
+  createdAt         DateTime  @default(now())
+
+  // Sender details
+  senderWalletId    String
+  senderWallet      Wallet    @relation("SenderWallet", fields: [senderWalletId], references: [id])
+  senderName        String
+
+  // Receiver details
+  receiverWalletId  String
+  receiverWallet    Wallet    @relation("ReceiverWallet", fields: [receiverWalletId], references: [id])
+  receiverName      String
 }
+
 
 
