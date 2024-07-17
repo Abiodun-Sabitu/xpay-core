@@ -19,7 +19,7 @@ export default router;
  *   post:
  *     summary: Transfers funds between two wallets owned by users.
  *     tags:
- *       - Wallets
+ *       - Transactions
  *     security:
  *       - BearerAuth: []
  *     description: "Allows a user to transfer funds from their wallet to another user's wallet within the same currency. Ensures sufficient funds, correct ownership, and KYC limitations."
@@ -38,11 +38,11 @@ export default router;
  *               senderWalletId:
  *                 type: string
  *                 description: "The ID of the sender's wallet."
- *                 example: "0018577272"
+ *                 example: "0016560810"
  *               receiverWalletId:
  *                 type: string
  *                 description: "The ID of the receiver's wallet."
- *                 example: "0016560810"
+ *                 example: "0018577272"
  *               amount:
  *                 type: number
  *                 format: string

@@ -6,7 +6,7 @@ import {
   generateOtp,
   generateEmailVerificationToken,
 } from "../../helpers/generateTokens.js";
-import { sendVerificationEmail } from "../../services/emailService.js";
+import { sendMail } from "../../services/emailService.js";
 import { emailVerificationContent } from "../../emails/emailVerificationMail.js";
 import { otpVerificationMail } from "../../emails/otpVerificationMail.js";
 
@@ -58,7 +58,7 @@ const login = async (req, res) => {
       const newToken = generateEmailVerificationToken({ id: user.id });
       const verificationUrl = `${process.env.BASE_URL}/verify-email?token=${newToken}`;
       const subject = "VERIFY YOUR EMAIL";
-      await sendVerificationEmail(
+      await sendMail(
         user.email,
         emailVerificationContent(verificationUrl),
         subject
@@ -83,11 +83,7 @@ const login = async (req, res) => {
     // If email is verified, proceed to generate OTP and send it
     const otp = generateOtp();
     const otpSubject = "X-Pay LOGIN VERIFICATION";
-    await sendVerificationEmail(
-      user.email,
-      otpVerificationMail(otp),
-      otpSubject
-    );
+    await sendMail(user.email, otpVerificationMail(otp), otpSubject);
 
     // Set the OTP expiry to 2 minutes from now
     const otpExpiry = new Date();

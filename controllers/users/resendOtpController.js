@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { generateOtp } from "../../helpers/generateTokens.js";
-import { sendVerificationEmail } from "../../services/emailService.js";
+import { sendMail } from "../../services/emailService.js";
 import { otpVerificationMail } from "../../emails/otpVerificationMail.js";
 
 const prisma = new PrismaClient();
@@ -21,7 +21,7 @@ const resendOtp = async (req, res) => {
 
     // Send the new OTP to the user's email
     const subject = "Your new OTP";
-    await sendVerificationEmail(user.email, otpVerificationMail(otp), subject);
+    await sendMail(user.email, otpVerificationMail(otp), subject);
 
     res.status(200).json({
       message: "A new OTP has been sent to your registered email.",

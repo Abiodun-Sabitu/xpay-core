@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export async function sendVerificationEmail(to, content, subject) {
+export async function sendMail(to, content, subject) {
   const mailOptions = {
     from: process.env.EMAIL_USERNAME,
     to: to,

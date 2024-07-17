@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
 import { emailVerificationContent } from "../../emails/emailVerificationMail.js";
-import { sendVerificationEmail } from "../../services/emailService.js";
+import { sendMail } from "../../services/emailService.js";
 import { generateEmailVerificationToken } from "../../helpers/generateTokens.js";
 
 const prisma = new PrismaClient();
@@ -70,7 +70,7 @@ const onboardUser = async (req, res) => {
 
     // Send a verification email to the new user
     const verificationUrl = `${process.env.BASE_URL}/verify-email?token=${userRecord.verificationToken}`;
-    await sendVerificationEmail(
+    await sendMail(
       userRecord.email,
       emailVerificationContent(verificationUrl, userRecord.firstName),
       "VERIFY YOUR EMAIL"

@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { generateAccountNumber } from "../../helpers/accountNumberGenerator.js";
 import { getOpeningBalance } from "../../helpers/balanceConverters.js";
-import { sendVerificationEmail } from "../../services/emailService.js";
+import { sendMail } from "../../services/emailService.js";
 import { accountCreationMail } from "../../emails/accountCreationMail.js";
 
 const prisma = new PrismaClient();
@@ -42,7 +42,7 @@ const createNgnWallet = async (req, res) => {
       where: { id: userId },
     });
     const subject = `X-PAY ${newWallet.currency} WALLET CREATION`;
-    await sendVerificationEmail(
+    await sendMail(
       user.email,
       accountCreationMail(newWallet.accountNumber, newWallet.currency),
       subject

@@ -22,6 +22,8 @@ export const fetchWallets = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching wallets:", error);
-    res.status(500).json({ message: "Failed to fetch wallets" });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch wallets", error: { error } });
   }
 };
