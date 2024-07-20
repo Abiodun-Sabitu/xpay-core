@@ -12,6 +12,9 @@ import createFxWalletRoute from "./routes/wallets/create-fx-walletRoute.js";
 import createNgnWalletRoute from "./routes/wallets/create-ngn-walletRoute.js";
 import fetchWalletsRoute from "./routes/wallets/fetchWalletsRoute.js";
 import transferRoute from "./routes/transactions/transferRoute.js";
+import nameEnquiryRoute from "./routes/wallets/nameEnquiryRoute.js";
+import forgotPasswordRoute from "./routes/users/forgotPasswordRoute.js";
+import resetPasswordRoute from "./routes/users/resetPasswordRoute.js";
 const app = express();
 const specs = swaggerJsdoc(options);
 
@@ -39,6 +42,9 @@ app.use(createFxWalletRoute);
 app.use(createNgnWalletRoute);
 app.use(fetchWalletsRoute);
 app.use(transferRoute);
+app.use(nameEnquiryRoute);
+app.use(forgotPasswordRoute);
+app.use(resetPasswordRoute);
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);

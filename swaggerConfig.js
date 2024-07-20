@@ -43,5 +43,8 @@ export const options = {
     "./routes/wallets/create-ngn-walletRoute.js",
     "./routes/wallets/fetchWalletsRoute.js",
     "./routes/transactions/transferRoute.js",
+    "./routes/wallets/nameEnquiryRoute.js",
+    "./routes/users/forgotPasswordRoute.js",
+    "./routes/users/resetPasswordRoute.js",
   ], // Make sure this path is correct and points to your route files
 };

@@ -139,24 +139,24 @@ const walletTransfer = async (req, res) => {
         id: result.updateSenderWallet.userId,
         name: result.transaction.senderName,
         walletId: result.updateSenderWallet.accountNumber,
-        balance: result.updateSenderWallet.balance,
+        // balance: result.updateSenderWallet.balance,
       },
       receiver: {
         id: result.updateReceiverWallet.userId,
         name: result.transaction.receiverName,
         walletId: result.updateReceiverWallet.accountNumber,
-        balance: result.updateReceiverWallet.balance,
+        // balance: result.updateReceiverWallet.balance,
       },
     };
 
-    const DebitMailSubject = "DEBIT ALERT - x-PAY WALLET";
+    const DebitMailSubject = "x-PAY WALLET DEBIT ALERT NOTIFICATION";
     await sendMail(
       senderDetails.email,
       debitAlertMail(transactionDetails, senderDetails.firstName),
       DebitMailSubject
     );
 
-    const CreditMailSubject = "CREDIT ALERT - x-PAY WALLET ";
+    const CreditMailSubject = "x-PAY WALLET CREDIT ALERT NOTIFICATION ";
     await sendMail(
       receiverDetails.email,
       creditAlertMail(transactionDetails, receiverDetails.firstName),

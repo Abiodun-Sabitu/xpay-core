@@ -18,3 +18,11 @@ export function generateEmailVerificationToken(payload) {
 export const generateOtp = () => {
   return crypto.randomInt(100000, 999999).toString();
 };
+
+/**
+ * Generates a secure random token using the crypto library.
+ * @return {string} A secure random token.
+ */
+export const generateRandomToken = () => {
+  return crypto.randomBytes(32).toString("hex"); // Generates a 64-character hexadecimal token
+};
